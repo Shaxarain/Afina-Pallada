@@ -1,0 +1,93 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Net.Http.Headers;
+using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
+
+namespace Afina_Palada
+{
+    class Program
+    {
+        class Afina
+        {
+            /*          E(x) = (ax+b)mod m;
+                        a - взаимно простое с m число
+                        b - случайно число от 0 до m
+                        m - размер алфавита
+                        x - номер шифруемой буквы*/
+
+            int a;
+            int[] amas = new int[] { 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25 };
+            int b;
+            int m = 26;
+            int modm;
+            int x;
+            int y;
+            int sx;
+            char[] alf;
+            string alphabet = "abcdefghijklmnopqrstuvwxyz";
+            List<char> res1 = new List<char>();
+            int dx;
+            public void Cipher(string smes)
+            {
+                char[] alf = alphabet.ToCharArray();
+                a = amas[new Random().Next(0, amas.Length)];
+                b = new Random().Next(0, 25);
+                Console.WriteLine($"a = {a}, b = {b}");
+                //Шифрование
+                Console.WriteLine("Зашифрованное сообщение:");
+                for (int i = 0; i < smes.Length; i++)
+                {
+                    for (int z = 0; z < alf.Length; z++)
+                    {
+                        if (smes[i] == alf[z])
+                        {
+                            x = z;
+                            break;
+                        }
+                    }
+                    sx = ((a * x) + b) % m;
+                    Console.Write(alf[sx]);
+                    res1.Add(alf[sx]);
+                }
+                    int ost = 1;
+                    int k = 0;
+                    string stopm = "";
+                    while ((m * k + ost) % a != 0)
+                    {
+                        int delimoe = m * k + ost;
+                        k++;
+                    }
+                int multobr = (m * k + ost) / a;
+                //Дешифрование
+                //D(x) = a-1 (y+m-b)mod26
+                Console.WriteLine("\n" + "Дешифрованное сообщение:");
+                for (int j = 0; j < res1.Count; j++)
+                {
+                    for (int q = 0; q < alf.Length; q++)
+                    {
+                        if (res1[j] == alf[q])
+                        {
+                            y = q;
+                            break;
+                        }
+                    }
+                    dx = (multobr * ((y + 26) - b)) % m;
+                    Console.Write(alf[dx]);
+                }
+            }
+
+            static void Main(string[] args)
+            {
+                Console.WriteLine("Введите шифруемое сообщение");
+                string smes = (Console.ReadLine());
+                smes = smes.ToLower().Replace(" ","");
+                Afina one = new Afina();
+                one.Cipher(smes);
+
+            }
+        }
+    }
+}
